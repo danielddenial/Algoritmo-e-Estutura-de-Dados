@@ -1,0 +1,282 @@
+#include <iostream>
+#define n 10
+using namespace std;
+
+struct Registro {
+    
+    int ch;
+    
+};
+
+struct data {
+    
+    int mes;
+    int ano;
+    
+};
+
+struct element {
+    
+    Registro chave;
+    float preco;
+    data validade;
+    
+};
+
+struct Lista {
+    
+    element A[n+1];
+    int numberElem;
+    
+};
+
+//iniciar a lista: Etapa 8.
+void iniLista (Lista *x) {
+    
+    x->numberElem = 0;
+    
+}
+
+//tamanho da lista: Etapa 2
+int tamList (Lista *x) {
+    
+    return x->numberElem;
+    
+}
+
+//busca de elementos: Etapa 3
+int buscaSentinela(Lista *x, int ch1) {
+    
+    int i = 0;
+    x->A[x->numberElem].chave.ch = ch1;
+    
+    while(x->A[i].chave.ch != ch1) {
+        
+        i++;
+        
+    } if (i == x->numberElem) {
+        
+        return -1; 
+        
+    } else {
+        
+        return i; 
+        
+    } 
+    
+}
+
+//inserir elementos Etapa 1.
+bool inserirElem (Lista *x, Registro reg, float pre, int mes, int ano) {
+    
+    if (x->numberElem >= n) {
+        
+        return false;
+        
+    } else {
+        
+        int pos = x->numberElem;
+        while (pos > 0 && x->A[pos-1].chave.ch > reg.ch) {
+            
+            x->A[pos] = x->A[pos-1];
+            pos--;
+            
+        }
+        
+        x->A[pos].preco = pre;
+        x->A[pos].validade.mes = mes;
+        x->A[pos].validade.ano = ano;
+        x->A[pos].chave.ch = reg.ch;
+        x->numberElem++;
+        return true;
+        
+    }
+    
+}
+
+//Exibir a Lista: Etapa 4
+void exibirLista (Lista *x) {
+    
+    int i;
+    cout << "A lista contem os seguintes elementos. \n";
+    cout << "Suas chaves: ";
+    for (i = 0; i < x->numberElem; i++) {
+        
+        cout << x->A[i].chave.ch << "\n";
+        
+    }
+    cout << "Seus precos: ";
+    for (i = 0; i < x->numberElem; i++) {
+        
+        cout << x->A[i].preco << "\n";
+        
+    }
+    cout << "Sua validade: ";
+    for (i = 0; i < x->numberElem; i++) {
+        
+        cout << x->A[i].validade.mes << "/" << x->A[i].validade.ano << "\n";
+        
+    }
+    
+}
+
+//Exluir elemento: Etapa 6
+bool excluirLis(int chave, Lista *x) {
+    
+    int j;
+    int posElem = buscaSentinela (x, chave);
+    
+    if (posElem == -1) {
+        return false;
+        
+    } else {
+        for (j = posElem; j < x->numberElem; j++) {
+            x->A[j] = x->A[j+1];
+            
+        }
+        x->numberElem--;
+        
+    }
+    return true;
+    
+}
+
+//Contagem precos: Etapa 7
+void contaLis(Lista *x, float p) {
+    
+    int cont = 0;
+    
+    for (int i = 0; i < x->numberElem; i++) {
+        
+        if (p < x->A[i].preco) {
+            
+            cont++;
+            
+        }
+        
+    }
+    
+    cout << "Tem " << cont << " mais caro(s) que o valor digitado.\n";
+    
+}
+
+
+int main() {
+    
+    int menu = 1;
+    Lista lis;
+    Registro code;
+    int verifica;
+    int mes;
+    int ano;
+    float preco;
+    float p;
+  
+    while (menu > 0) {
+        
+        cout << "Digite: \n0 para sair. \n"
+        "1 para inserir um produto. \n"
+        "2 para contar a quantidade de produtos na lista.\n"
+        "3 para procurar um produto pelo código. \n"
+        "4 para mostrar todos os produtos da lista (com código e preço). \n"
+        "5 para ordenar a lista pelo código. \n"
+        "6 para eliminar um produto da lista. \n"
+        "7 para contar todos os produtos que possuem um preço maior que p, onde p é um número real positivo ingressado pelo usuário. \n"
+        "8 para iniciar uma lista. \n";
+        cin >> menu;
+        
+        switch(menu) {
+            
+            case 1:
+                cout << "Digite a chave, o preco e a data de validade (mes e ano), respectivamente: ";
+                cin >> code.ch >> preco >> mes >> ano;
+                verifica=inserirElem (&lis, code, preco, mes, ano);
+                
+                if (verifica==0) {
+                    
+                    cout<<"Nao foi possivel inserir.\n";
+                    
+                }
+                else {
+                    
+                    cout<<"Elemento inserido com sucesso.\n";
+                    
+                }
+                cin.ignore();
+                
+            break;
+            
+            case 2:
+                cout << "O tamanho da lista: " << tamList(&lis) << "\n";
+                cin.ignore();
+                
+            break;
+            
+            case 3:
+                cout << "Digite a chave do produto: ";
+                cin >> code.ch;
+                verifica = buscaSentinela(&lis, code.ch);
+                
+                if (verifica==-1) {
+                    cout<<"o elemento com chave " << code.ch <<" nao esta na lista. \n";
+                    
+                }
+                else {
+                    cout<<"o elemento com chave " << code.ch <<" esta na posicao: " << verifica+1 <<"\n";
+                    
+                }
+                cin.ignore();
+                
+            break;
+            
+            case 4:
+                exibirLista(&lis);
+                cin.ignore();
+                
+            break;
+            
+            case 5:
+                cout << "Já esta ordenado! :D";
+                cin.ignore();
+                
+            break;
+            
+            case 6:
+                cout << "Digite a chave que deseja excluir: ";
+                cin >> code.ch;
+                verifica = excluirLis (code.ch, &lis);
+                
+                if (verifica == -1) {
+                    cout << "A chave digitada não existe\n";
+                    
+                } else {
+                    cout << "A chave " << code.ch << " foi exluida com sucesso.\n";
+                    
+                }
+                cin.ignore();
+                
+            break;
+            
+            case 7:
+                cout<<"Digite o valor de p: \n";
+                cin>>p;
+                contaLis(&lis, p);
+                cin.ignore();
+                
+            break;
+            
+            case 8:
+                iniLista(&lis);
+                cin.ignore();
+                
+            break;
+            
+        }
+        
+        cout << "Digite enter para continuar. \n";
+        cin.ignore();
+        
+    }
+
+    return 0;
+}
