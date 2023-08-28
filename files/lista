@@ -243,9 +243,6 @@ int main() {
     
     cout << "Hello World! \n";
     
-    cout << "Huan Guilherme Ribeiro Miranda Di Giorno - 222034127\nDaniel Martinz - 222024345\n"
-    "Felipe dos Santos Souza Xavier - 2111038450\nThiago Arcanjo - 222005519\n";
-
     cout << "Digite enter para continuar. \n";
     cin.ignore();
 
