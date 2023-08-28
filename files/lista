@@ -66,27 +66,28 @@ int buscaSentinela(Lista *x, int ch1) {
     
 }
 
+
 //inserir elementos Etapa 1.
-bool inserirElem (Lista *x, Registro reg, float pre, int mes, int ano) {
+bool inserirElem (Lista *x, int posi, Registro reg, float pre, int mes, int ano) {
     
-    if (x->numberElem >= n) {
+    posi--;
+    if (x->numberElem >= n || (posi < 0) || (posi > x->numberElem)) {
         
         return false;
         
     } else {
         
-        int pos = x->numberElem;
-        while (pos > 0 && x->A[pos-1].chave.ch > reg.ch) {
+        int j;
+        for (j = x->numberElem; j > posi; j--) {
             
-            x->A[pos] = x->A[pos-1];
-            pos--;
+            x->A[j] = x->A[j-1];
             
         }
         
-        x->A[pos].preco = pre;
-        x->A[pos].validade.mes = mes;
-        x->A[pos].validade.ano = ano;
-        x->A[pos].chave.ch = reg.ch;
+        x->A[j].preco = pre;
+        x->A[j].validade.mes = mes;
+        x->A[j].validade.ano = ano;
+        x->A[j].chave.ch = reg.ch;
         x->numberElem++;
         return true;
         
@@ -118,6 +119,72 @@ void exibirLista (Lista *x) {
         
     }
     
+}
+
+//Ordenar parte1: Etapa 5
+void algoritmo1(Lista *l){
+    
+    for(int i=0;i<l->numberElem-1;++i) {
+        
+        for(int j=l->numberElem-1;j>i;--j){
+            
+            if (l->A[i].chave.ch > l->A[j].chave.ch) {
+                
+                int tempCode = l->A[i].chave.ch;
+                l->A[i].chave.ch = l->A[j].chave.ch;
+                l->A[j].chave.ch = tempCode;
+              
+                int tempMes = l->A[i].validade.mes;
+                l->A[i].validade.mes = l->A[j].validade.mes;
+                l->A[j].validade.mes = tempMes;
+             
+                int tempAno = l->A[i].validade.ano;
+                l->A[i].validade.ano = l->A[j].validade.ano;
+                l->A[j].validade.ano = tempAno;
+              
+                float tempPreco = l->A[i].preco;
+                l->A[i].preco = l->A[j].preco;
+                l->A[j].preco = tempPreco;
+                
+            }
+            
+        }
+        
+    }
+
+}
+
+//Ordenar parte 2: Etapa 5
+void algoritmo2(Lista *l){
+    
+    for(int i=0;i<l->numberElem-1;++i) {
+        
+        for(int j=l->numberElem-1;j>i;--j){
+            
+            if (l->A[i].chave.ch < l->A[j].chave.ch) {
+                
+                int tempCode = l->A[i].chave.ch;
+                l->A[i].chave.ch = l->A[j].chave.ch;
+                l->A[j].chave.ch = tempCode;
+              
+                int tempMes = l->A[i].validade.mes;
+                l->A[i].validade.mes = l->A[j].validade.mes;
+                l->A[j].validade.mes = tempMes;
+             
+                int tempAno = l->A[i].validade.ano;
+                l->A[i].validade.ano = l->A[j].validade.ano;
+                l->A[j].validade.ano = tempAno;
+              
+                float tempPreco = l->A[i].preco;
+                l->A[i].preco = l->A[j].preco;
+                l->A[j].preco = tempPreco;
+                
+            }
+            
+        }
+        
+    }
+
 }
 
 //Exluir elemento: Etapa 6
@@ -164,14 +231,28 @@ void contaLis(Lista *x, float p) {
 int main() {
     
     int menu = 1;
+    int menu2 = 0;
     Lista lis;
     Registro code;
+    int pos1;
     int verifica;
     int mes;
     int ano;
     float preco;
     float p;
-  
+    
+    cout << "Hello World! \n";
+    
+    cout << "Huan Guilherme Ribeiro Miranda Di Giorno - 222034127\nDaniel Martinz - 222024345\n"
+    "Felipe dos Santos Souza Xavier - 2111038450\nThiago Arcanjo - 222005519\n";
+
+    cout << "Digite enter para continuar. \n";
+    cin.ignore();
+
+    cout << "Nao esqueça de iniciar a lista. \n";
+    cout << "Digite enter para continuar. \n";
+    cin.ignore();
+    
     while (menu > 0) {
         
         cout << "Digite: \n0 para sair. \n"
@@ -187,21 +268,38 @@ int main() {
         
         switch(menu) {
             
+            case 0:
+                
+            break;
+            
             case 1:
+                cout << "Digite a posicao que deseja colocar: \n";
+                cin >> pos1;
                 cout << "Digite a chave, o preco e a data de validade (mes e ano), respectivamente: ";
                 cin >> code.ch >> preco >> mes >> ano;
-                verifica=inserirElem (&lis, code, preco, mes, ano);
                 
-                if (verifica==0) {
+                verifica = buscaSentinela(&lis, code.ch);
+                
+                if (verifica==-1) {
+                    verifica=inserirElem (&lis, pos1, code, preco, mes, ano);
                     
-                    cout<<"Nao foi possivel inserir.\n";
+                    if (verifica==0) {
+                        
+                        cout<<"Nao foi possivel inserir.\n";
+                        
+                    }
+                    else {
+                        
+                        cout<<"Elemento inserido com sucesso.\n";
+                        
+                    }
                     
                 }
                 else {
-                    
-                    cout<<"Elemento inserido com sucesso.\n";
+                    cout<<"o elemento com chave ja está na lista. \n";
                     
                 }
+                
                 cin.ignore();
                 
             break;
@@ -236,7 +334,29 @@ int main() {
             break;
             
             case 5:
-                cout << "Já esta ordenado! :D";
+                cout << "Para ordenar digite:\n 1 para o algoritmo crescente.\n 2 para o algoritmo decrescente. \n";
+                cin >> menu2;
+                
+                switch(menu2) {
+                    
+                    case 1:
+                        algoritmo1(&lis);
+                        cout << "Sua lista foi ordenada! :D \n";
+                        
+                    break;
+                    
+                    case 2: 
+                        algoritmo2(&lis);
+                        cout << "Sua lista foi ordenada! :D \n";
+                        
+                    break;
+                    
+                    default: 
+                        cout << "Escolha invalida. \n";
+                        
+                    break;
+                }
+                
                 cin.ignore();
                 
             break;
@@ -266,7 +386,19 @@ int main() {
             break;
             
             case 8:
-                iniLista(&lis);
+                if (lis.numberElem > 0 ) {
+                    cout << "A lista ja foi iniciada.\n";
+                    cin.ignore();
+                    
+                } else {
+                    iniLista(&lis);
+                    
+                }
+                
+            break;
+            
+            default: 
+                cout << "Escolha invalida!\n";
                 cin.ignore();
                 
             break;
